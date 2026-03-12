@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="sn.isi.l3gl.api.chat.controller.LoginController"
+      style="-fx-background-color: #f0f4f8; -fx-padding: 40;">
+
+    <!-- Titre de l'application -->
+    <Label text="Messagerie Association"
+           style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- Sous-titre -->
+    <Label text="Connexion ou inscription"
+           style="-fx-font-size: 14; -fx-text-fill: #7f8c8d;"/>
+
+    <!--
+        Champ serveur CACHE :
+        visible="false"  : le composant n'est pas affiche
+        managed="false"  : le composant ne prend pas de place dans le layout
+        Le controller lit quand meme fx:id="serverField" mais la valeur
+        est fixee en dur dans initialize() -> l'utilisateur ne peut pas la changer.
+    -->
+    <TextField fx:id="serverField" visible="false" managed="false"/>
+
+    <!-- Carte centrale : formulaire -->
+    <VBox spacing="15" alignment="CENTER"
+          style="-fx-background-color: white; -fx-padding: 30;
+                 -fx-background-radius: 10; -fx-effect: dropshadow(gaussian,#aaa,10,0,0,2);"
+          maxWidth="400">
+
+        <!-- Champ nom d'utilisateur -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Username:" minWidth="100"
+                   style="-fx-font-weight: bold;"/>
+            <TextField fx:id="usernameField" promptText="Nom d'utilisateur"
+                       HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <!-- Champ mot de passe -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Mot de passe:" minWidth="100"
+                   style="-fx-font-weight: bold;"/>
+            <PasswordField fx:id="passwordField" promptText="Mot de passe"
+                           HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <!-- Role : visible uniquement pour l'inscription -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Role:" minWidth="100"
+                   style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+            <ComboBox fx:id="roleComboBox" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </HBox>
+
+        <!-- Zone de statut : erreur ou succes -->
+        <Label fx:id="statusLabel" text="" wrapText="true"
+               style="-fx-font-size: 12;" alignment="CENTER" maxWidth="350"/>
+
+        <!-- Boutons -->
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="loginButton" text="Se connecter" onAction="#onLogin"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-padding: 10 20;
+                           -fx-background-radius: 5;" prefWidth="150"/>
+
+            <Button fx:id="registerButton" text="S'inscrire" onAction="#onRegister"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-padding: 10 20;
+                           -fx-background-radius: 5;" prefWidth="150"/>
+        </HBox>
+    </VBox>
+</VBox>

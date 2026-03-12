@@ -11,10 +11,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.12.1</junit.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
+        <!-- JavaFX : interface graphique -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -25,21 +27,33 @@
             <artifactId>javafx-fxml</artifactId>
             <version>21.0.6</version>
         </dependency>
+
+        <!-- Hibernate : ORM pour la persistance en base de donnees -->
         <dependency>
-            <groupId>org.kordamp.bootstrapfx</groupId>
-            <artifactId>bootstrapfx-core</artifactId>
-            <version>0.4.0</version>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.4.4.Final</version>
         </dependency>
+
+        <!-- Driver PostgreSQL : connexion a la base PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+
+        <!-- BCrypt : hachage des mots de passe (RG9) -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!-- JUnit : tests unitaires -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>5.12.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -51,26 +65,29 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>25</source>
-                    <target>25</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
+
+            <!--
+                javafx-maven-plugin : lance l'application avec le bon module-path JavaFX.
+                Sans module-info.java, on passe par le classpath etendu.
+                mainClass : format simple sans nom de module (pas de "module/classe").
+            -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>sn.isi.l3gl.api.chat/sn.isi.l3gl.api.chat.HelloApplication</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
+                            <!--
+                                Avec module-info.java, le format est "nom_du_module/nom_complet_classe".
+                                Le nom du module est celui declare dans module-info.java.
+                            -->
+                            <mainClass>sn.isi.l3gl.api.chat/sn.isi.l3gl.api.chat.Launcher</mainClass>
                         </configuration>
                     </execution>
                 </executions>

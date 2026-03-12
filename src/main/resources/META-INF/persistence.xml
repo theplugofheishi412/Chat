@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+             https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <!--
+        Unite de persistance "chatPU" :
+        Hibernate va gerer toutes les entites (@Entity) declarees ici
+        et les synchroniser avec la base de donnees MySQL.
+    -->
+    <persistence-unit name="chatPU" transaction-type="RESOURCE_LOCAL">
+
+        <!-- Entite User : table des utilisateurs -->
+        <class>sn.isi.l3gl.api.chat.model.User</class>
+
+        <!-- Entite Message : table des messages -->
+        <class>sn.isi.l3gl.api.chat.model.Message</class>
+
+        <properties>
+            <!-- Driver JDBC pour PostgreSQL -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+
+            <!-- URL de connexion a la base : modifier 'chatdb', 'localhost', '5432' si besoin -->
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://localhost:5432/chatdb"/>
+
+            <!-- Identifiants PostgreSQL : a adapter selon votre config -->
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <!--
+                hibernate.hbm2ddl.auto = update :
+                Hibernate cree les tables si elles n'existent pas
+                et les met a jour si le modele change.
+                Ne pas utiliser "create" en prod (efface les donnees).
+            -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- Dialecte PostgreSQL : indique a Hibernate le type de SQL a generer -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+
+            <!-- Affiche les requetes SQL dans la console (utile pour le debug) -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

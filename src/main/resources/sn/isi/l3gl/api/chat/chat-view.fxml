@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    chat-view.fxml : interface principale du chat.
+
+    Disposition en BorderPane :
+    - TOP    : barre de titre avec info utilisateur et bouton rafraichir
+    - LEFT   : panneau des membres connectes (ListView)
+    - CENTER : zone de conversation (TextArea + saisie)
+
+    BorderPane : conteneur qui divise l'espace en 5 zones (top/bottom/left/right/center).
+    C'est le layout ideal pour une application style messagerie.
+-->
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sn.isi.l3gl.api.chat.controller.ChatController"
+            style="-fx-background-color: #ecf0f1;">
+
+    <!-- ===== BARRE DU HAUT : informations et actions globales ===== -->
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-background-color: #2c3e50; -fx-padding: 12;">
+
+            <!-- Nom de l'utilisateur connecte -->
+            <Label fx:id="currentUserLabel" text="Connecte : ..."
+                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;"/>
+
+            <!-- Separateur flexible qui pousse les boutons a droite -->
+            <!-- HBox.hgrow="ALWAYS" : ce Region prend tout l'espace disponible -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Bouton visible uniquement pour les ORGANISATEURS (gere dans le controller) -->
+            <Button fx:id="allUsersButton" text="Tous les membres"
+                    onAction="#onAllUsers"
+                    style="-fx-background-color: #e67e22; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 5;"/>
+
+            <!-- Actualiser la liste des connectes -->
+            <Button fx:id="refreshButton" text="Actualiser"
+                    onAction="#onRefreshUsers"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 5;"/>
+        </HBox>
+    </top>
+
+    <!-- ===== PANNEAU GAUCHE : liste des membres connectes ===== -->
+    <left>
+        <VBox spacing="0" prefWidth="200"
+              style="-fx-background-color: #34495e;">
+
+            <!-- En-tete du panneau gauche -->
+            <Label text="Membres connectes"
+                   style="-fx-text-fill: #bdc3c7; -fx-font-weight: bold;
+                          -fx-padding: 10 15; -fx-font-size: 12;"/>
+
+            <Separator style="-fx-background-color: #4a6278;"/>
+
+            <!--
+                ListView : affiche une liste scrollable d'elements.
+                VBox.vgrow="ALWAYS" : occupe tout l'espace vertical disponible.
+                Chaque element est un String "username:STATUS".
+                La selection dans cette liste declenche le ChangeListener du controller.
+            -->
+            <ListView fx:id="userListView" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #34495e; -fx-control-inner-background: #34495e;
+                             -fx-text-fill: white; -fx-border-color: transparent;"/>
+        </VBox>
+    </left>
+
+    <!-- ===== ZONE CENTRALE : conversation ===== -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- En-tete de la conversation -->
+            <HBox style="-fx-background-color: #bdc3c7; -fx-padding: 8 15;"
+                  alignment="CENTER_LEFT">
+                <Label fx:id="conversationLabel" text="Selectionnez un membre"
+                       style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            </HBox>
+
+            <!--
+                TextArea : zone de texte multiligne pour l'historique des messages.
+                editable="false" : l'utilisateur ne peut pas modifier le contenu.
+                wrapText="true" : retour a la ligne automatique.
+                VBox.vgrow="ALWAYS" : prend tout l'espace disponible.
+            -->
+            <TextArea fx:id="chatArea"
+                      editable="false"
+                      wrapText="true"
+                      VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #fafafa; -fx-font-size: 13;
+                             -fx-control-inner-background: #fafafa;
+                             -fx-border-color: transparent;"/>
+
+            <!-- Zone de saisie du message -->
+            <HBox spacing="10" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-padding: 10;
+                         -fx-border-color: #ddd; -fx-border-width: 1 0 0 0;">
+
+                <!--
+                    TextField : champ de saisie monolinoe.
+                    HBox.hgrow="ALWAYS" : prend tout l'espace horizontal.
+                    onAction : appuyer sur Entree = cliquer sur Envoyer.
+                -->
+                <TextField fx:id="messageField"
+                           promptText="Saisissez votre message..."
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-background-radius: 20; -fx-padding: 8 15;
+                                  -fx-border-radius: 20; -fx-border-color: #ccc;"/>
+
+                <Button fx:id="sendButton" text="Envoyer"
+                        onAction="#onSendMessage"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-padding: 8 20;
+                               -fx-background-radius: 20;"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
