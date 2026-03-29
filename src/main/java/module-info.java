@@ -53,6 +53,8 @@ module sn.isi.l3gl.api.chat {
 
     // java.xml.bind (JAXB) : utilise par certaines parties de Hibernate pour la serialisation
     requires java.xml;
+    requires org.java_websocket;
+    requires io.github.cdimascio.dotenv.java;
 
     // ===== OUVERTURE PAR REFLEXION =====
     /**
@@ -94,4 +96,5 @@ module sn.isi.l3gl.api.chat {
     exports sn.isi.l3gl.api.chat.client;
     exports sn.isi.l3gl.api.chat.controller;
     exports sn.isi.l3gl.api.chat.dao;
+    exports sn.isi.l3gl.api.chat.test;
 }

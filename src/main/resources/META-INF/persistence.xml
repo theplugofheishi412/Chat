@@ -22,14 +22,17 @@
             <!-- Driver JDBC pour PostgreSQL -->
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 
-            <!-- URL de connexion a la base : modifier 'chatdb', 'localhost', '5432' si besoin -->
-            <property name="jakarta.persistence.jdbc.url"
+            <!--
+             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:postgresql://localhost:5432/chatdb"/>
 
-            <!-- Identifiants PostgreSQL : a adapter selon votre config -->
-            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
-            <property name="jakarta.persistence.jdbc.password" value=""/>
+            URL de connexion a la base : modifier 'chatdb', 'localhost', '5432' si besoin -->
 
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://dpg-d745urnfte5s73bb5pf0-a.oregon-postgres.render.com/chatdb_ov3g?sslmode=require"/>
+
+            <property name="jakarta.persistence.jdbc.user" value="chatdb_ov3g_user"/>
+            <property name="jakarta.persistence.jdbc.password" value="2lAgy0HC21wYAvKq8ptxP6QWNuitIn6M"/>
             <!--
                 hibernate.hbm2ddl.auto = update :
                 Hibernate cree les tables si elles n'existent pas

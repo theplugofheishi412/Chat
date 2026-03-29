@@ -28,21 +28,21 @@
             <version>21.0.6</version>
         </dependency>
 
-        <!-- Hibernate : ORM pour la persistance en base de donnees -->
+        <!-- Hibernate : ORM pour la persistance -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>6.4.4.Final</version>
         </dependency>
 
-        <!-- Driver PostgreSQL : connexion a la base PostgreSQL -->
+        <!-- Driver PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
         </dependency>
 
-        <!-- BCrypt : hachage des mots de passe (RG9) -->
+        <!-- BCrypt : hachage des mots de passe -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
@@ -56,10 +56,27 @@
             <version>5.12.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- WebSocket -->
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
+            <!-- Compilation Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -70,11 +87,7 @@
                 </configuration>
             </plugin>
 
-            <!--
-                javafx-maven-plugin : lance l'application avec le bon module-path JavaFX.
-                Sans module-info.java, on passe par le classpath etendu.
-                mainClass : format simple sans nom de module (pas de "module/classe").
-            -->
+            <!-- Plugin JavaFX : pour lancer en dev avec mvn javafx:run -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -83,15 +96,89 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <!--
-                                Avec module-info.java, le format est "nom_du_module/nom_complet_classe".
-                                Le nom du module est celui declare dans module-info.java.
-                            -->
                             <mainClass>sn.isi.l3gl.api.chat/sn.isi.l3gl.api.chat.Launcher</mainClass>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!--
+                maven-shade-plugin : genere DEUX JARs :
+                1. chat-server.jar  -> deploye sur Render
+                2. chat-client.jar  -> distribue a l'equipe
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+
+                    <!-- ===== JAR SERVEUR (pour Render) ===== -->
+                    <execution>
+                        <id>server-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>${project.build.directory}/chat-server.jar</outputFile>
+                            <!-- Exclure JavaFX du serveur (inutile cote serveur) -->
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.openjfx:*</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>sn.isi.l3gl.api.chat.server.ChatServer</mainClass>
+                                </transformer>
+                                <!-- Fusionne les fichiers de service (Hibernate en a besoin) -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+
+                    <!-- ===== JAR CLIENT (pour l'equipe Windows) ===== -->
+                    <execution>
+                        <id>client-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>${project.build.directory}/chat-client.jar</outputFile>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>sn.isi.l3gl.api.chat.Launcher</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
