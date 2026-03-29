@@ -6,8 +6,9 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Étape 2 : Image finale légère
+#en local EXPOSE 8080 , en prod EXPOSE 10000
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/chat-server.jar app.jar
-EXPOSE 8080
+EXPOSE 10000
 CMD ["java", "-jar", "app.jar"]
